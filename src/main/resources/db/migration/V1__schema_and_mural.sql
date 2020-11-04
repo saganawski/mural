@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS mural_directory;
 
 CREATE TABLE mural (
     id int NOT NULL AUTO_INCREMENT,
-    mural_registration_id int DEFAULT NULL,
+    mural_registration_id int DEFAULT NULL UNIQUE,
 	artist_credit varchar(254) default null,
 	artwork_title varchar(254) default null,
 	media varchar(254) default null,
