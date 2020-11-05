@@ -10,7 +10,7 @@ $(document).ready(function (){
                 url: url
             }).then(function(data) {
             	setCards(data._embedded.murals);
-//            	setPagination(data);
+            	setPagination(data);
             });
         }
 
@@ -39,23 +39,22 @@ $(document).ready(function (){
         	for(var i=1; i <= pageCount; i++){
         		//set left chevron
         		if(i === 1){
-        			$('#pagination').append('<li id="left-chevron" class="waves-effect"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+        			$('#pagination').append('<li id="left-chevron" class="page-item"><a class="page-link" href="#" tabindex="-1">Previous</a></li>');
         		}
         		//set normal page
-        		$('#pagination').append('<li class="waves-effect"><a href="#!">'+ i +'</a></li>');
+        		$('#pagination').append('<li class="page-item"><a  class="page-link" href="#!">'+ i +'</a></li>');
         		//set right chevron
         		if(i === pageCount){
-        			$('#pagination').append('<li id="right-chevron" class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+        			$('#pagination').append('<li id="right-chevron" class="page-item"><a class="page-link" href="#!">Next</a></li>');
         		}
-
-        		setPaginationClassAttributes(pageNumber, pageCount);
         	}
+
+            setPaginationClassAttributes(pageNumber, pageCount);
         }
 
         function setPaginationClassAttributes(pageNumber, pageCount){
         	// highlight active page
-        	$('#pagination').find('li').find('a').eq(pageNumber + 1).parent("li").removeClass("waves-effect").addClass("active");
-
+        	$('#pagination').find('li').find('a').eq(pageNumber + 1).parent("li").addClass("active");
         	// disable left chevron
         	if(pageNumber === 0){
         		$('#left-chevron').addClass("disabled");
@@ -72,33 +71,33 @@ $(document).ready(function (){
         	event.preventDefault();
 
         	target = event.target.innerText;
-        	cheveronPageAction(target);
+        	chevronPageAction(target);
 
         	pageNumber = event.target.text - 1;
 
-        	if(target != "chevron_left" && target != "chevron_right"){
+        	if(target != "Previous" && target != "Next"){
         		url = "murals/?page=" + pageNumber;
         		getMuralCards(url);
         	}
 
         });
 
-        function cheveronPageAction(target){
+        function chevronPageAction(target){
         	currentPage = $('#pagination li.active').text();
         	// do nothing
-        	if((target != "chevron_left") && (target != "chevron_right")){
+        	if((target != "Previous") && (target != "Next")){
         		return;
-        	}else if((target === "chevron_left" && currentPage === "1") || (target === "chevron_right" && currentPage === "15")){
+        	}else if((target === "Previous" && currentPage === "1") || (target === "Next" && currentPage === "18")){ //TODO: 18 is the number of pages- refactor
         		return;
         	}
 
-        	if(target === "chevron_left"){
+        	if(target === "Previous"){
         		goToPageNumber = currentPage -2
         		url = "murals?page=" + goToPageNumber;
             	getMuralCards(url);
         	}
 
-        	if(target === "chevron_right"){
+        	if(target === "Next"){
         		goToPageNumber = currentPage;
         		url = "murals?page=" + goToPageNumber;
             	getMuralCards(url);
