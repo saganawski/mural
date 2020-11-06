@@ -1,6 +1,6 @@
 package com.chicago.mural.jobs.service;
 
-import com.chicago.mural.jobs.dao.JpaMuralRepo;
+import com.chicago.mural.mural.dao.JpaMuralRepo;
 import com.chicago.mural.mural.Mural;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.List;
 
 @Service
