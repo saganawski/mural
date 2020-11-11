@@ -1,5 +1,7 @@
 $(document).ready(function (){
     $('#nav').load("../common/_nav.html");
+    vm = this;
+    vm.mural = {};
 
     let searchParams = new URLSearchParams(window.location.search);
 
@@ -10,6 +12,7 @@ $(document).ready(function (){
             url: "/mural/details/" + muralRegistrationId
         }).then(function(data) {
             setDescriptionDetails(data);
+            vm.mural = data;
             console.log(data);
         });
     }
@@ -27,4 +30,45 @@ $(document).ready(function (){
         $('#description').append(" " + description);
         $('#address').append(" " + address);
     }
+
+
+    $('#image-upload-form').on('submit', function(event){
+        event.preventDefault();
+
+        $.ajax({
+            url: "/mural/ "+ vm.mural.id +"/aws-image-upload",
+            type: "POST",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            cache: false
+        }).then(function(data){
+        //TODO: confirmation and add image / reload
+            console.log(data);
+        }).fail(function(error){
+        //TODO: sweetalert
+            console.log(error);
+        });
+    });
+
+    getMuralImages(vm.mural.id);
+    function getMuralImages(muralId){
+        $.ajax({
+            url: "/mural/ "+ muralRegistrationId +"/aws-image-download",
+            type: "GET"
+        }).then(function(murals){
+            for(var i=0;i < murals.length; i++){
+                if(i < 1){
+                    $('#image').attr("src", "data:image/jpeg;base64," + murals[i]);
+                }else{
+                    $('#image').append("<img class='center-align' alt='' src='data:image/jpeg;base64,'"+murals[i] );
+                }
+            }
+
+        }).fail(function(error){
+            console.log(error);
+        });
+
+    }
+
 })
