@@ -43,11 +43,22 @@ $(document).ready(function (){
             contentType: false,
             cache: false
         }).then(function(data){
-        //TODO: confirmation and add image / reload
-            console.log(data);
+            swal({
+                title: "Success!",
+                text: "You Uploaded an Image",
+                icon: "success",
+                timer: 2000
+            }).then(function(){
+                location.reload();
+            });
         }).fail(function(error){
         //TODO: sweetalert
             console.log(error);
+            swal({
+                title: "Error!",
+                text: "Could not upload image \n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
     });
 

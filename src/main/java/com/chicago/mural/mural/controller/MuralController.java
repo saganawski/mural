@@ -27,6 +27,9 @@ public class MuralController {
     @PostMapping("/{muralId}/aws-image-upload")
     public ResponseEntity<String> awsFileUpload(MultipartFile file, @PathVariable("muralId") int muralId, @AuthenticationPrincipal UserPrincipal userPrincipal){
         //TODO: sometype of file check
+        if(userPrincipal == null){
+            throw new RuntimeException("Must be logged in to upload an image!");
+        }
         return muralService.awsImageUpload(muralId,userPrincipal,file);
     }
 
