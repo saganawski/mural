@@ -12,5 +12,5 @@ public interface MuralService {
 
     ResponseEntity<String> awsImageUpload(int muralId, UserPrincipal userPrincipal, MultipartFile file);
 
-    List<String> getMuralImages(int muralId);
+    List<String> getMuralImages(int muralRegistrationId);
 }

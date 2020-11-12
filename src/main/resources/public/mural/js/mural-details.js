@@ -62,12 +62,13 @@ $(document).ready(function (){
         });
     });
 
-    getMuralImages(vm.mural.id);
-    function getMuralImages(muralId){
+    getMuralImages(muralRegistrationId);
+    function getMuralImages(muralRegistrationId){
         $.ajax({
             url: "/mural/ "+ muralRegistrationId +"/aws-image-download",
             type: "GET"
         }).then(function(murals){
+            //TODO: image format
             for(var i=0;i < murals.length; i++){
                 if(i < 1){
                     $('#image').attr("src", "data:image/jpeg;base64," + murals[i]);
@@ -78,6 +79,11 @@ $(document).ready(function (){
 
         }).fail(function(error){
             console.log(error);
+            swal({
+                title: "Error!",
+                text: "Could not display images \n" + error.responseJSON.message,
+                icon: "error"
+            });
         });
 
     }

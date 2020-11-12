@@ -107,32 +107,32 @@ public class MuralServiceImpl implements MuralService {
     }
 
     @Override
-    public List<String> getMuralImages(int muralId) {
-        //find mural
-        // get images for murals
+    public List<String> getMuralImages(int muralRegistrationId) {
+        final Mural mural = jpaMuralRepo.findByMuralRegistrationId(muralRegistrationId);
+        final List<MuralImageUpload> muralImageUploads = mural.getMuralImageUploads();
 
         final List<String> base64Strings = new ArrayList<>();
-        //TODO: remove hard codes
-        Regions clientRegion = Regions.US_EAST_2;
-        String bucketName = "aws-mural-images";
-        String key = "profile.jpg";
 
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                .withRegion(clientRegion)
-                .build();
-        S3Object s3Object = s3Client.getObject(bucketName,key);
-        S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
-        // TODO: encoding takes alot of time maybe switch to just adding the url to image src?
-        byte[] bytes = null;
-        try {
-            bytes = IOUtils.toByteArray(s3ObjectInputStream);
+        muralImageUploads.forEach(mi ->{
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(Regions.US_EAST_2)
+                    .build();
+            S3Object s3Object = s3Client.getObject(mi.getAwsBucketName(),mi.getAwsKey());
+            S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+            // TODO: encoding takes alot of time maybe switch to just adding the url to image src?
+            byte[] bytes = null;
+            try {
+                bytes = IOUtils.toByteArray(s3ObjectInputStream);
 
-        final String encodedString = Base64.getEncoder().encodeToString(bytes);
-        base64Strings.add(encodedString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            final String encodedString = Base64.getEncoder().encodeToString(bytes);
+            base64Strings.add(encodedString);
+
+        });
 
         return base64Strings;
     }

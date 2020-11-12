@@ -33,9 +33,9 @@ public class MuralController {
         return muralService.awsImageUpload(muralId,userPrincipal,file);
     }
 
-    @GetMapping("/{muralId}/aws-image-download")
-    public List<String> getMuralImages(@PathVariable("muralId") int muralId){
-        return muralService.getMuralImages(muralId);
+    @GetMapping("/{muralRegistrationId}/aws-image-download")
+    public List<String> getMuralImages(@PathVariable("muralRegistrationId") int muralRegistrationId){
+        return muralService.getMuralImages(muralRegistrationId);
     }
 
 }
