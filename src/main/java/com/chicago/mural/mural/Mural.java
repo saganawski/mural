@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="mural",uniqueConstraints = {@UniqueConstraint(columnNames = {"mural_registration_id"})})
@@ -63,4 +65,7 @@ public class Mural {
 
     @Column(name="longitude")
     private String longitude;
+
+    @OneToMany(mappedBy = "mural",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<MuralImageUpload> muralImageUploads = new ArrayList<>();
 }
