@@ -53,4 +53,20 @@ public class MuralImageUpload {
     @Column(name = "created_date", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    @Override
+    public String toString() {
+        return "MuralImageUpload{" +
+                "id=" + id +
+                ", mural=" + mural.getId() +
+                ", user=" + user +
+                ", awsKey='" + awsKey + '\'' +
+                ", awsBucketName='" + awsBucketName + '\'' +
+                ", likes=" + likes +
+                ", updatedBy=" + updatedBy +
+                ", updatedDate=" + updatedDate +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                '}';
+    }
 }

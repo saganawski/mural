@@ -7,8 +7,13 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.chicago.mural.mural.Mural;
+import com.chicago.mural.mural.MuralImageUpload;
+import com.chicago.mural.mural.dao.JpaMuralImageUploadRepo;
 import com.chicago.mural.mural.dao.JpaMuralRepo;
+import com.chicago.mural.mural.dto.MuralDTO;
 import com.chicago.mural.securtiy.UserPrincipal;
+import com.chicago.mural.user.User;
+import com.chicago.mural.user.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +31,37 @@ import java.util.List;
 public class MuralServiceImpl implements MuralService {
     @Autowired
     private JpaMuralRepo jpaMuralRepo;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private JpaMuralImageUploadRepo jpaMuralImageUploadRepo;
 
     @Override
-    public Mural getMural(int muralRegistrationId) {
+    public MuralDTO getMural(int muralRegistrationId) {
         final Mural mural = jpaMuralRepo.findByMuralRegistrationId(muralRegistrationId);
-        return mural;
+        final MuralDTO muralDTO = MuralDTO.builder()
+                .id(mural.getId())
+                .mural_registration_id(mural.getMural_registration_id())
+                .artwork_title(mural.getArtwork_title())
+                .artist_credit(mural.getArtist_credit())
+                .affiliated_or_commissioning(mural.getAffiliated_or_commissioning())
+                .description_of_artwork(mural.getDescription_of_artwork())
+                .street_address(mural.getStreet_address())
+                .ward(mural.getWard())
+                .build();
+        return muralDTO;
     }
 
     @Override
     public ResponseEntity<String> awsImageUpload(int muralId, UserPrincipal userPrincipal, MultipartFile file) {
+        final Mural mural = jpaMuralRepo.getOne(muralId);
+        final Integer userId = userPrincipal.getUserId();
+        final User user = userRepository.getOne(userId);
+
         //TODO: remove hard codes
         Regions clientRegion = Regions.US_EAST_2;
         String bucketName = "aws-mural-images";
-        String fileName = file.getOriginalFilename();
+        String fileName = user.getUsername() + "-" + file.getOriginalFilename();
 
         try{
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
@@ -52,6 +75,20 @@ public class MuralServiceImpl implements MuralService {
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file.getInputStream(),metadata);
             s3Client.putObject(putObjectRequest);
 
+            final MuralImageUpload muralImageUpload = MuralImageUpload.builder()
+                    .mural(mural)
+                    .user(user)
+                    .awsKey(putObjectRequest.getKey())
+                    .awsBucketName(putObjectRequest.getBucketName())
+                    .likes(0)
+                    .updatedBy(userId)
+                    .createdBy(userId)
+                    .build();
+
+            jpaMuralImageUploadRepo.save(muralImageUpload);
+            mural.getMuralImageUploads().add(muralImageUpload);
+            jpaMuralRepo.save(mural);
+
         } catch (AmazonS3Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>("s3 exception \n" + e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -61,6 +98,9 @@ public class MuralServiceImpl implements MuralService {
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<String>("Io Exception \n" + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<String>(" Exception \n" + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<String>("UpLoad successful!", HttpStatus.OK);
@@ -93,7 +133,7 @@ public class MuralServiceImpl implements MuralService {
 
         final String encodedString = Base64.getEncoder().encodeToString(bytes);
         base64Strings.add(encodedString);
-        
+
         return base64Strings;
     }
 }

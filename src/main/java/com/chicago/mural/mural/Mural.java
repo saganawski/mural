@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class Mural {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -66,6 +65,7 @@ public class Mural {
     @Column(name="longitude")
     private String longitude;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "mural",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<MuralImageUpload> muralImageUploads = new ArrayList<>();
 }

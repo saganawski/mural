@@ -1,6 +1,7 @@
 package com.chicago.mural.mural.controller;
 
 import com.chicago.mural.mural.Mural;
+import com.chicago.mural.mural.dto.MuralDTO;
 import com.chicago.mural.mural.service.MuralService;
 import com.chicago.mural.securtiy.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class MuralController {
     private MuralService muralService;
 
     @GetMapping("/details/{muralRegistrationId}")
-    public Mural getMural(@PathVariable("muralRegistrationId") int muralRegistrationId){
+    public MuralDTO getMural(@PathVariable("muralRegistrationId") int muralRegistrationId){
         return muralService.getMural(muralRegistrationId);
     }
 
