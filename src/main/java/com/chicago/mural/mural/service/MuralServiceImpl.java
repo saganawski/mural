@@ -72,7 +72,8 @@ public class MuralServiceImpl implements MuralService {
             metadata.setContentLength(file.getInputStream().available());
             metadata.setContentType(file.getContentType());
 
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file.getInputStream(),metadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file.getInputStream(),metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead);
             s3Client.putObject(putObjectRequest);
 
             final MuralImageUpload muralImageUpload = MuralImageUpload.builder()
