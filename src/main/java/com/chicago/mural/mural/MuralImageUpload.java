@@ -40,6 +40,9 @@ public class MuralImageUpload {
     @Column(name="likes")
     private Integer likes;
 
+    @Column(name = "aws_url")
+    private String awsUrl;
+
     @Column(name = "updated_by")
     private Integer updatedBy;
 

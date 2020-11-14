@@ -74,13 +74,17 @@ public class MuralServiceImpl implements MuralService {
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file.getInputStream(),metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead);
+
             s3Client.putObject(putObjectRequest);
+
+            final String awsUrl = s3Client.getUrl(bucketName, fileName).toExternalForm();
 
             final MuralImageUpload muralImageUpload = MuralImageUpload.builder()
                     .mural(mural)
                     .user(user)
                     .awsKey(putObjectRequest.getKey())
                     .awsBucketName(putObjectRequest.getBucketName())
+                    .awsUrl(awsUrl)
                     .likes(0)
                     .updatedBy(userId)
                     .createdBy(userId)

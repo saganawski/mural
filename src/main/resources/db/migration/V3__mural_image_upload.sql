@@ -5,6 +5,7 @@ CREATE TABLE mural_image_upload (
 	aws_key varchar(512) default null,
 	aws_bucket_name varchar(254) default null,
 	likes int default null,
+	aws_url varchar(1200) DEFAULT NULL,
     created_by int(11) DEFAULT '-1',
     created_date datetime DEFAULT CURRENT_TIMESTAMP,
     updated_by int(11) DEFAULT '-1',
