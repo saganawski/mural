@@ -11,6 +11,7 @@ import com.chicago.mural.mural.MuralImageUpload;
 import com.chicago.mural.mural.dao.JpaMuralImageUploadRepo;
 import com.chicago.mural.mural.dao.JpaMuralRepo;
 import com.chicago.mural.mural.dto.MuralDTO;
+import com.chicago.mural.mural.dto.MuralImageUploadDto;
 import com.chicago.mural.securtiy.UserPrincipal;
 import com.chicago.mural.user.User;
 import com.chicago.mural.user.dao.UserRepository;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,6 +41,25 @@ public class MuralServiceImpl implements MuralService {
     @Override
     public MuralDTO getMural(int muralRegistrationId) {
         final Mural mural = jpaMuralRepo.findByMuralRegistrationId(muralRegistrationId);
+        final List<MuralImageUploadDto> muralImageUploadDtos = mural.getMuralImageUploads().stream()
+                .map(mi -> {
+                    final MuralImageUploadDto muralImageUploadDto = MuralImageUploadDto.builder()
+                            .id(mi.getId())
+                            .user(mi.getUser())
+                            .awsKey(mi.getAwsKey())
+                            .awsBucketName(mi.getAwsBucketName())
+                            .likes(mi.getLikes())
+                            .awsUrl(mi.getAwsUrl())
+                            .updatedBy(mi.getUpdatedBy())
+                            .updatedDate(mi.getUpdatedDate())
+                            .createdBy(mi.getCreatedBy())
+                            .createdDate(mi.getCreatedDate())
+                            .build();
+                    return  muralImageUploadDto;
+                })
+                .collect(Collectors.toList());
+
+
         final MuralDTO muralDTO = MuralDTO.builder()
                 .id(mural.getId())
                 .mural_registration_id(mural.getMural_registration_id())
@@ -48,7 +69,11 @@ public class MuralServiceImpl implements MuralService {
                 .description_of_artwork(mural.getDescription_of_artwork())
                 .street_address(mural.getStreet_address())
                 .ward(mural.getWard())
+                .muralImageUploads(muralImageUploadDtos)
+                .latitude(mural.getLatitude())
+                .longitude(mural.getLongitude())
                 .build();
+
         return muralDTO;
     }
 
@@ -79,16 +104,15 @@ public class MuralServiceImpl implements MuralService {
 
             final String awsUrl = s3Client.getUrl(bucketName, fileName).toExternalForm();
 
-            final MuralImageUpload muralImageUpload = MuralImageUpload.builder()
-                    .mural(mural)
-                    .user(user)
-                    .awsKey(putObjectRequest.getKey())
-                    .awsBucketName(putObjectRequest.getBucketName())
-                    .awsUrl(awsUrl)
-                    .likes(0)
-                    .updatedBy(userId)
-                    .createdBy(userId)
-                    .build();
+            final MuralImageUpload muralImageUpload = new MuralImageUpload();
+                muralImageUpload.setMural(mural);
+                muralImageUpload.setUser(user);
+                muralImageUpload.setAwsKey(putObjectRequest.getKey());
+                muralImageUpload.setAwsBucketName(putObjectRequest.getBucketName());
+                muralImageUpload.setAwsUrl(awsUrl);
+                muralImageUpload.setLikes(0);
+                muralImageUpload.setUpdatedBy(userId);
+                muralImageUpload.setCreatedBy(userId);
 
             jpaMuralImageUploadRepo.save(muralImageUpload);
             mural.getMuralImageUploads().add(muralImageUpload);

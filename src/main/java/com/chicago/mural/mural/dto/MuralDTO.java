@@ -1,10 +1,7 @@
 package com.chicago.mural.mural.dto;
 
-import com.chicago.mural.mural.MuralImageUpload;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,5 +28,5 @@ public class MuralDTO {
     private String latitude;
     private String longitude;
 
-    private List<MuralImageUpload> muralImageUploads = new ArrayList<>();
+    private List<MuralImageUploadDto> muralImageUploads = new ArrayList<>();
 }

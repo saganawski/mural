@@ -12,34 +12,42 @@
     <!--    sweetAlert-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+    <link rel="stylesheet" href="css/mural-details.css">
     <script src="js/mural-details.js"></script>
     <title>Murals</title>
 </head>
 <body>
     <div id="nav" style="margin-bottom:20px"></div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col s12 l12">
-                <img id="image" class="center-align" alt="" src="../common/images/no-image.png" style="border:1px; border: solid;">
-            </div>
+    <div id="load-layout">
+        <div class="main">
+            <h3>Featured Image</h3>
+            <img id="image" alt="loading" src="../common/images/no-image.png">
         </div>
-        <div>
+
+        <div class="description">
             <h2 id="title">Title:</h2>
             <h4 id="artist">Artist:</h4>
             <h4 id="commissioned">Commissioned:</h4>
             <h4 id="description">Description:</h4>
             <h4 id="address">Address:</h4>
+
+            <br/>
+            <form id="image-upload-form">
+                <div>
+                    <label for="file">Choose Image to upload</label>
+                    <input type="file" id="file" name="file" accept="image/*">
+                    <button type="submit" >Submit</button>
+                </div>
+            </form>
         </div>
+
+        <div class="other-images">
+<!--            images are appended here-->
+        </div>
+
     </div>
 
-    <form id="image-upload-form">
-        <div>
-            <label for="file">Choose Image to upload</label>
-            <input type="file" id="file" name="file" accept="image/*">
-            <button type="submit" >Submit</button>
-        </div>
-    </form>
+
 
 
 </body>

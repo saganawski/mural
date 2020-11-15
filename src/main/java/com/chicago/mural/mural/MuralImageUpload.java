@@ -1,6 +1,7 @@
 package com.chicago.mural.mural;
 
 import com.chicago.mural.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.lang.NonNull;
@@ -14,7 +15,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class MuralImageUpload {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -24,6 +24,7 @@ public class MuralImageUpload {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "mural_id")
+    @JsonIgnore
     private Mural mural;
 
     @NonNull

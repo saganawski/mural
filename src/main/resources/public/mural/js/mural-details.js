@@ -12,8 +12,8 @@ $(document).ready(function (){
             url: "/mural/details/" + muralRegistrationId
         }).then(function(data) {
             setDescriptionDetails(data);
+            setImages(data);
             vm.mural = data;
-            console.log(data);
         });
     }
 
@@ -31,6 +31,20 @@ $(document).ready(function (){
         $('#address').append(" " + address);
     }
 
+    function setImages(mural){
+        let images = mural.muralImageUploads;
+
+        for(var i=0;i < images.length; i++){
+            if(i < 1){
+                $('#image').attr("src", images[i].awsUrl);
+            }else{
+                $('.other-images').append("<div class='card'>" +
+                    "<img class='side-image' alt='image loading' src=" + images[i].awsUrl + ">" +
+                    "</div>"
+                );
+            }
+        }
+    }
 
     $('#image-upload-form').on('submit', function(event){
         event.preventDefault();
@@ -52,7 +66,6 @@ $(document).ready(function (){
                 location.reload();
             });
         }).fail(function(error){
-        //TODO: sweetalert
             console.log(error);
             swal({
                 title: "Error!",
@@ -62,30 +75,5 @@ $(document).ready(function (){
         });
     });
 
-    getMuralImages(muralRegistrationId);
-    function getMuralImages(muralRegistrationId){
-        $.ajax({
-            url: "/mural/ "+ muralRegistrationId +"/aws-image-download",
-            type: "GET"
-        }).then(function(murals){
-            //TODO: image format
-            for(var i=0;i < murals.length; i++){
-                if(i < 1){
-                    $('#image').attr("src", "data:image/jpeg;base64," + murals[i]);
-                }else{
-                    $('#image').append("<img class='center-align' alt='' src='data:image/jpeg;base64,'"+murals[i] );
-                }
-            }
-
-        }).fail(function(error){
-            console.log(error);
-            swal({
-                title: "Error!",
-                text: "Could not display images \n" + error.responseJSON.message,
-                icon: "error"
-            });
-        });
-
-    }
 
 })
