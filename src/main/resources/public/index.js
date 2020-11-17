@@ -11,13 +11,14 @@ $(document).ready(function (){
             }).then(function(data) {
             	setCards(data._embedded.murals);
             	setPagination(data);
+            	setImages(data._embedded.murals);
             });
         }
 
         function setCards(murals){
         	for(let mural of murals){
         		var html = "<div class='card col-sm-12 col-lg-12'>\n"
-        		+ "<img class='card-img-top' src='common/images/no-image.png' alt='no image'>\n"
+        		+ "<img id='"+ mural.mural_registration_id +"' class='card-img-top' src='common/images/no-image.png' alt='no image'>\n"
         		+ "<div class='card-body'>\n"
         		+ "<span class='card-title'>"+ mural.artwork_title +"</span>\n"
         		+ "<p>"+ mural.street_address +"</p>\n"
@@ -102,5 +103,21 @@ $(document).ready(function (){
         		url = "murals?page=" + goToPageNumber;
             	getMuralCards(url);
         	}
+        }
+
+        function setImages(murals){
+            // for each mural get image url
+            for(let mural of murals){
+                // find image url
+                let url = "/mural/" + mural.mural_registration_id + "/aws-url";
+                $.ajax({
+                    url: url
+                }).then(function(data) {
+                    if(data.length > 1){
+                        $('#'+mural.mural_registration_id).attr("src", data);
+                    }
+                });
+
+            }
         }
 })

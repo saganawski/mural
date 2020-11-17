@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,5 +165,17 @@ public class MuralServiceImpl implements MuralService {
         });
 
         return base64Strings;
+    }
+
+    @Override
+    public String getMuralAwsUrl(int muralRegistrationId) {
+        final Mural mural = jpaMuralRepo.findByMuralRegistrationId(muralRegistrationId);
+        final List<MuralImageUpload> muralImageUploads = mural.getMuralImageUploads();
+        final String awsUrl = muralImageUploads.stream()
+                .sorted(Comparator.comparingInt(MuralImageUpload::getLikes).reversed())
+                .findFirst()
+                .map(m -> m.getAwsUrl())
+                .orElse("");
+        return awsUrl;
     }
 }

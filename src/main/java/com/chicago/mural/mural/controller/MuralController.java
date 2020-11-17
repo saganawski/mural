@@ -38,4 +38,9 @@ public class MuralController {
         return muralService.getMuralImages(muralRegistrationId);
     }
 
+    @GetMapping("/{muralRegistrationId}/aws-url")
+    public String getMuralAwsUrl(@PathVariable("muralRegistrationId") int muralRegistrationId){
+        return muralService.getMuralAwsUrl(muralRegistrationId);
+    }
+
 }
