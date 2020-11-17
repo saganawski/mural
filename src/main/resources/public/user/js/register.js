@@ -8,7 +8,8 @@ $(document).ready(function (){
         let validated = validationCheck(passwordForm);
         if(validated){
             let jsonForm = convertFormToJson($("#user-form").serializeArray());
-/*            $.ajax({
+
+            $.ajax({
                 type: "POST",
                 url:"/users",
                 data: JSON.stringify(jsonForm),
@@ -20,7 +21,7 @@ $(document).ready(function (){
                     icon: "success",
                     timer: 2000
                 }).then(function(){
-                    window.location.href = "/user/user.html";
+                    window.location.href = "/";
                 });
             }).fail(function(err){
                 console.log(err);
@@ -29,7 +30,7 @@ $(document).ready(function (){
                     text: "Failure to create user! \n" + err.responseJSON.message,
                     icon: "error"
                 });
-            });*/
+            });
         }
     });
 
