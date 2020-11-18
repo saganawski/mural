@@ -202,4 +202,10 @@ public class MuralServiceImpl implements MuralService {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public List<String> getWardIds() {
+        final List<String> wardIds =  jpaMuralRepo.findAllWardIds();
+        return wardIds;
+    }
 }

@@ -18,4 +18,6 @@ public interface MuralService {
     String getMuralAwsUrl(int muralRegistrationId);
 
     ResponseEntity<Map<String, Object>> findAllMuralsByWardId(String wardId, int page, int size);
+
+    List<String> getWardIds();
 }

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/mural")
@@ -49,6 +50,11 @@ public class MuralController {
                                                                    @RequestParam(defaultValue = "15") int size
                                                                    ){
         return muralService.findAllMuralsByWardId(wardId,page,size);
+    }
+
+    @GetMapping("/ward-ids")
+    public List<String> getWardIds(){
+        return muralService.getWardIds();
     }
 
 }
