@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MuralService {
     MuralDTO getMural(int muralRegistrationId);
@@ -15,4 +16,6 @@ public interface MuralService {
     List<String> getMuralImages(int muralRegistrationId);
 
     String getMuralAwsUrl(int muralRegistrationId);
+
+    ResponseEntity<Map<String, Object>> findAllMuralsByWardId(String wardId, int page, int size);
 }

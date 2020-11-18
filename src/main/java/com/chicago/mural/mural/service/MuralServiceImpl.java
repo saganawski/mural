@@ -16,6 +16,9 @@ import com.chicago.mural.securtiy.UserPrincipal;
 import com.chicago.mural.user.User;
 import com.chicago.mural.user.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -177,5 +177,29 @@ public class MuralServiceImpl implements MuralService {
                 .map(m -> m.getAwsUrl())
                 .orElse("");
         return awsUrl;
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> findAllMuralsByWardId(String wardId, int page, int size) {
+        try{
+            List<Mural> murals = new ArrayList<>();
+            final Pageable paging = PageRequest.of(page,size);
+
+            final Page<Mural> muralRepoByWard = jpaMuralRepo.findByWard(wardId, paging);
+
+            murals = muralRepoByWard.getContent();
+
+            final Map<String, Object> response = new HashMap<>();
+
+            response.put("murals", murals);
+            response.put("currentPage", muralRepoByWard.getNumber());
+            response.put("totalItems", muralRepoByWard.getTotalElements());
+            response.put("totalPages", muralRepoByWard.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

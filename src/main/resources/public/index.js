@@ -2,7 +2,7 @@ $(document).ready(function (){
     $('#nav').load("common/_nav.html");
 
     getMuralCards("/murals");
-
+    //TODO: http://127.0.0.1:8080/murals?page=1&size=10  FILTER?
     	function getMuralCards(url){
     		$('#mural-card').empty();
 

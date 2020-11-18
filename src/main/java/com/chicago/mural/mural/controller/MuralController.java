@@ -1,6 +1,5 @@
 package com.chicago.mural.mural.controller;
 
-import com.chicago.mural.mural.Mural;
 import com.chicago.mural.mural.dto.MuralDTO;
 import com.chicago.mural.mural.service.MuralService;
 import com.chicago.mural.securtiy.UserPrincipal;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/mural")
@@ -41,6 +41,14 @@ public class MuralController {
     @GetMapping("/{muralRegistrationId}/aws-url")
     public String getMuralAwsUrl(@PathVariable("muralRegistrationId") int muralRegistrationId){
         return muralService.getMuralAwsUrl(muralRegistrationId);
+    }
+
+    @GetMapping("/ward/{wardId}")
+    public ResponseEntity<Map<String,Object>> findAllMuralByWardId(@PathVariable("wardId") String wardId,
+                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "15") int size
+                                                                   ){
+        return muralService.findAllMuralsByWardId(wardId,page,size);
     }
 
 }
