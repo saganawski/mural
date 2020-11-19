@@ -6,7 +6,7 @@ $(document).ready(function (){
 
     getMuralWardIds();
     getMuralCards("/murals");
-    //TODO: http://127.0.0.1:8080/murals?page=1&size=10
+    //TODO: http://127.0.0.1:8080/murals?page=1&size=10 to adjust page size
     function getMuralCards(url){
         $('#mural-card').empty();
 
