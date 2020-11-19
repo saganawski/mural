@@ -1,5 +1,9 @@
 $(document).ready(function (){
     $('#nav').load("common/_nav.html");
+
+    var inWardSearch = false;
+    var inWardId = null;
+
     getMuralWardIds();
     getMuralCards("/murals");
     //TODO: http://127.0.0.1:8080/murals?page=1&size=10
@@ -9,9 +13,16 @@ $(document).ready(function (){
         $.ajax({
             url: url
         }).then(function(data) {
-            setCards(data._embedded.murals);
-            setPagination(data);
-            setImages(data._embedded.murals);
+            //TODO: refactor this yuk
+            if(!inWardSearch){
+                setCards(data._embedded.murals);
+                setPagination(data.page.number, data.page.totalPages);
+                setImages(data._embedded.murals);
+            }else if(inWardSearch){
+                setCards(data.murals);
+                setPagination(data.currentPage, data.totalPages);
+                setImages(data.murals);
+            }
         });
     }
 
@@ -33,9 +44,7 @@ $(document).ready(function (){
         }
     }
 
-    function setPagination(pagination){
-        pageNumber = pagination.page.number;
-        pageCount = pagination.page.totalPages;
+    function setPagination(pageNumber, pageCount){
         $('#pagination').empty();
 
         for(var i=1; i <= pageCount; i++){
@@ -73,35 +82,50 @@ $(document).ready(function (){
         event.preventDefault();
 
         target = event.target.innerText;
-        chevronPageAction(target);
+        totalPages = $('#pagination li').length -2;
 
+        chevronPageAction(target, totalPages);
+        // a way to determine if i am in wards search
         pageNumber = event.target.text - 1;
 
         if(target != "Previous" && target != "Next"){
-            url = "murals/?page=" + pageNumber;
+                        //TODO: refactor this yuk
+            if(!inWardSearch){
+                url = "murals/?page=" + pageNumber;
+            }else if(inWardSearch){
+                url = "mural/ward/" + inWardId +"?page=" + pageNumber;
+            }
             getMuralCards(url);
         }
 
     });
 
-    function chevronPageAction(target){
+    function chevronPageAction(target, totalPages){
         currentPage = $('#pagination li.active').text();
         // do nothing
         if((target != "Previous") && (target != "Next")){
             return;
-        }else if((target === "Previous" && currentPage === "1") || (target === "Next" && currentPage === "18")){ //TODO: 18 is the number of pages- refactor
+        }else if((target === "Previous" && currentPage === "1") || (target === "Next" && currentPage == totalPages)){
             return;
         }
 
         if(target === "Previous"){
             goToPageNumber = currentPage -2
-            url = "murals?page=" + goToPageNumber;
+            if(!inWardSearch){
+                url = "murals?page=" + goToPageNumber;
+            }else if(inWardSearch){
+                url = "mural/ward/" + inWardId +"?page=" + goToPageNumber;
+            }
             getMuralCards(url);
         }
 
         if(target === "Next"){
             goToPageNumber = currentPage;
-            url = "murals?page=" + goToPageNumber;
+            if(!inWardSearch){
+                url = "murals?page=" + goToPageNumber;
+            }else if(inWardSearch){
+                url = "mural/ward/" + inWardId +"?page=" + goToPageNumber;
+            }
             getMuralCards(url);
         }
     }
@@ -138,12 +162,18 @@ $(document).ready(function (){
     }
 
     $('body').on('change', '#wardSearch', function(event){
-        ///ward/{wardId}
         let selectWardId = event.target.value;
+        inWardSearch = true;
+        inWardId = selectWardId;
+
         $.ajax({
             url: "mural/ward/" + selectWardId
         }).then(function(data){
             console.log(data);
+            $('#mural-card').empty();
+            setCards(data.murals);
+            setPagination(data.currentPage, data.totalPages);
+            setImages(data.murals);
         });
     });
 
