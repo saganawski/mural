@@ -37,9 +37,16 @@ $(document).ready(function (){
         for(var i=0;i < images.length; i++){
             if(i < 1){
                 $('#image').attr("src", images[i].awsUrl);
+                // append like icon and counter
+                numberOfLikes = images[i].likes;
+
+                $('.main').append("<div> <i id='featuredImage' class='far fa-thumbs-up fa-3x'></i> <span> Likes: "+ numberOfLikes +"</span></div>");
             }else{
                 $('.other-images').append("<div class='card'>" +
                     "<img class='side-image' alt='image loading' src=" + images[i].awsUrl + ">" +
+                        "<div>" +
+                        "<i class='far fa-thumbs-up fa-2x'></i> <span> Likes: "+ images[i].likes +"</span>" +
+                        "</div>" +
                     "</div>"
                 );
             }
