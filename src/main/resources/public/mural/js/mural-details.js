@@ -40,7 +40,7 @@ $(document).ready(function (){
                 // append like icon and counter
                 numberOfLikes = images[i].likes;
 
-                $('.main').append("<div> <i id='featuredImage' class='far fa-thumbs-up fa-3x'></i> <span> Likes: "+ numberOfLikes +"</span></div>");
+                $('.main').append("<div> <i id='featuredImage' class='far fa-thumbs-up fa-3x' data-image='"+ JSON.stringify(images[i]) +"'></i> <span> Likes: "+ numberOfLikes +"</span></div>");
             }else{
                 $('.other-images').append("<div class='card'>" +
                     "<img class='side-image' alt='image loading' src=" + images[i].awsUrl + ">" +
@@ -80,6 +80,15 @@ $(document).ready(function (){
                 icon: "error"
             });
         });
+    });
+
+    $('#load-layout').on('click', '#featuredImage', function(event){
+        event.preventDefault();
+        let image = this.getAttribute('data-image');
+        // block user info no no
+        // update image likes
+        // update icon
+        // userId
     });
 
 

@@ -43,6 +43,7 @@ public class MuralServiceImpl implements MuralService {
     public MuralDTO getMural(int muralRegistrationId) {
         final Mural mural = jpaMuralRepo.findByMuralRegistrationId(muralRegistrationId);
         final List<MuralImageUploadDto> muralImageUploadDtos = mural.getMuralImageUploads().stream()
+                .sorted(Comparator.comparingInt(MuralImageUpload::getLikes).reversed())
                 .map(mi -> {
                     final MuralImageUploadDto muralImageUploadDto = MuralImageUploadDto.builder()
                             .id(mi.getId())
