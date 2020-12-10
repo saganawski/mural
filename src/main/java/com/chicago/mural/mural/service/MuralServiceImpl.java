@@ -47,7 +47,7 @@ public class MuralServiceImpl implements MuralService {
                 .map(mi -> {
                     final MuralImageUploadDto muralImageUploadDto = MuralImageUploadDto.builder()
                             .id(mi.getId())
-                            .user(mi.getUser())
+                            //TODO jsonignore user property may need user for votes in strecth
                             .awsKey(mi.getAwsKey())
                             .awsBucketName(mi.getAwsBucketName())
                             .likes(mi.getLikes())
@@ -189,6 +189,7 @@ public class MuralServiceImpl implements MuralService {
             final Page<Mural> muralRepoByWard = jpaMuralRepo.findByWard(wardId, paging);
 
             murals = muralRepoByWard.getContent();
+            //TODO jsonignore user property may need user for votes in strecth
 
             final Map<String, Object> response = new HashMap<>();
 
@@ -200,6 +201,7 @@ public class MuralServiceImpl implements MuralService {
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         }catch (Exception e){
+            System.out.println(e);
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

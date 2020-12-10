@@ -169,7 +169,6 @@ $(document).ready(function (){
         $.ajax({
             url: "mural/ward/" + selectWardId
         }).then(function(data){
-            console.log(data);
             $('#mural-card').empty();
             setCards(data.murals);
             setPagination(data.currentPage, data.totalPages);

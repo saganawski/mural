@@ -30,6 +30,7 @@ public class MuralImageUpload {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Column(name="aws_key")
