@@ -45,7 +45,7 @@ $(document).ready(function (){
                 $('.other-images').append("<div class='card'>" +
                     "<img class='side-image' alt='image loading' src=" + images[i].awsUrl + ">" +
                         "<div>" +
-                        "<i class='far fa-thumbs-up fa-2x'></i> <span> Likes: "+ images[i].likes +"</span>" +
+                        "<i class='far fa-thumbs-up fa-2x side-image-like' data-image='"+ JSON.stringify(images[i]) +"'></i> <span> Likes: "+ images[i].likes +"</span>" +
                         "</div>" +
                     "</div>"
                 );
@@ -85,9 +85,18 @@ $(document).ready(function (){
     $('#load-layout').on('click', '#featuredImage', function(event){
         event.preventDefault();
         let image = JSON.parse(this.getAttribute('data-image'));
+        updateImageLikes(image.id);
+    });
 
+    $('#load-layout').on('click', '.side-image-like', function(event){
+        event.preventDefault();
+        image = JSON.parse(this.getAttribute('data-image'));
+        updateImageLikes(image.id);
+    });
+
+    function updateImageLikes(imageId){
         $.ajax({
-            url: "/mural-image/"+ image.id +"/add-like",
+            url: "/mural-image/"+ imageId+"/add-like",
             type: "POST"
         }).then(function(data){
             swal({
@@ -107,7 +116,7 @@ $(document).ready(function (){
                 icon: "error"
             });
         });
-    });
+    }
 
 
 })
