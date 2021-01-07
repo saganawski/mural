@@ -84,11 +84,29 @@ $(document).ready(function (){
 
     $('#load-layout').on('click', '#featuredImage', function(event){
         event.preventDefault();
-        let image = this.getAttribute('data-image');
-        // block user info no no
-        // update image likes
-        // update icon
-        // userId
+        let image = JSON.parse(this.getAttribute('data-image'));
+
+        $.ajax({
+            url: "/mural-image/"+ image.id +"/add-like",
+            type: "POST"
+        }).then(function(data){
+            swal({
+                title: "Success!",
+                text: "You Liked the image",
+                icon: "success",
+                timer: 2000
+            })
+            .then(function(){
+                location.reload();
+            });
+        }).fail(function(error){
+            console.log(error);
+            swal({
+                title: "Error!",
+                text: "Could not like image \n" + error.responseJSON.message,
+                icon: "error"
+            });
+        });
     });
 
 

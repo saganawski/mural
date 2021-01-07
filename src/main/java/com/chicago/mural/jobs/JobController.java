@@ -19,7 +19,6 @@ public class JobController {
     @GetMapping("/chicago-mural")
     public List<Mural> runChicagoMural(){
 //        TODO: add auth user
-        System.out.println("hits");
         return jobService.returnMurals();
     }
 }

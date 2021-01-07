@@ -1,5 +1,6 @@
 package com.chicago.mural.mural;
 
+import com.chicago.mural.securtiy.UserPrincipal;
 import com.chicago.mural.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -73,5 +74,10 @@ public class MuralImageUpload {
                 ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
                 '}';
+    }
+
+    public void addLike(UserPrincipal userPrincipal) {
+        this.likes = this.likes + 1;
+        this.updatedBy = userPrincipal.getUserId();
     }
 }
